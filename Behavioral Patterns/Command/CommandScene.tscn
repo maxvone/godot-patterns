@@ -1,0 +1,53 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Behavioral Patterns/Command/Font.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Behavioral Patterns/Command/Settings.cs" type="Script" id=2]
+[ext_resource path="res://Behavioral Patterns/Command/ButtonTemplate.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Behavioral Patterns/Command/LabelTemplate.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Behavioral Patterns/Command/InputHandler.cs" type="Script" id=5]
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Container" type="HBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/separation = 161
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ActionLabel" type="Label" parent="Container"]
+margin_left = 231.0
+margin_top = 256.0
+margin_right = 631.0
+margin_bottom = 343.0
+rect_min_size = Vector2( 400, 0 )
+custom_fonts/font = ExtResource( 1 )
+text = "Action"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Settings" type="GridContainer" parent="Container"]
+margin_left = 792.0
+margin_top = 300.0
+margin_right = 792.0
+margin_bottom = 300.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_constants/vseparation = 15
+custom_constants/hseparation = 19
+columns = 2
+script = ExtResource( 2 )
+labelScene = ExtResource( 4 )
+buttonScene = ExtResource( 3 )
+
+[connection signal="KeysUpdated" from="." to="Container/Settings" method="UpdateButtons"]

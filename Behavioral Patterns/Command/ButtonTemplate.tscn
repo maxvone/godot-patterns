@@ -1,0 +1,7 @@
+[gd_scene format=2]
+
+[node name="JumpButton" type="Button"]
+margin_left = 149.0
+margin_right = 299.0
+margin_bottom = 55.0
+rect_min_size = Vector2( 150, 0 )
