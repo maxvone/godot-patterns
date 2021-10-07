@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
 
 namespace Patterns.Behavioral_Patterns.Command
@@ -42,25 +43,25 @@ namespace Patterns.Behavioral_Patterns.Command
 
         }
 
-        private void UpdateButtons(Dictionary<ICommand, KeyList> commands)
+        public void UpdateButtons(Dictionary<ICommand, KeyList> commands)
         {
-            // for (int i = 0; i < _labelButtonPairs.Count; i++)
-            // {
-            //     var labelButtonPair = _labelButtonPairs.ElementAt(i);
-            //
-            //     for (int j = 0; j < commands.Count; j++)
-            //     {
-            //         var commandItem = _labelButtonPairs.ElementAt(i);
-            //
-            //         
-            //         if (labelButtonPair.Key.GetType() == commandItem.Key.GetType())
-            //         {
-            //             _labelButtonPairs[labelButtonPair.Key].Label.Text = commandItem.Value.ToString();
-            //         }
-            //     }
-            //     
-            //     
-            // }
+            for (int i = 0; i < _labelButtonPairs.Count; i++)
+            {
+                var labelButtonPair = _labelButtonPairs.ElementAt(i);
+            
+                for (int j = 0; j < commands.Count; j++)
+                {
+                    var commandItem = _labelButtonPairs.ElementAt(i);
+            
+                    
+                    if (labelButtonPair.Key.GetType() == commandItem.Key.GetType())
+                    {
+                        _labelButtonPairs[labelButtonPair.Key].Label.Text = commandItem.Key.Name;
+                    }
+                }
+                
+                
+            }
         }
     
     }
