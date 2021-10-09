@@ -12,7 +12,7 @@ namespace Patterns.Behavioral_Patterns.Command
         
         private Dictionary<ICommand, LabelButtonPair> _labelButtonPairs = new Dictionary<ICommand, LabelButtonPair>();
 
-        public bool IsBinding { get; set; }
+        public bool IsInBindingState { get; set; }
         public ICommand BindingCommand { get; private set; }
         
         public void Initialize(Dictionary<ICommand, uint> keyLists)
@@ -68,7 +68,7 @@ namespace Patterns.Behavioral_Patterns.Command
                 
             }
 
-            IsBinding = false;
+            IsInBindingState = false;
             BindingCommand = null;
         }
 
@@ -82,7 +82,7 @@ namespace Patterns.Behavioral_Patterns.Command
                 {
                     labelButtonPair.Value.Button.Text = "Press a key";
                     
-                    IsBinding = true;
+                    IsInBindingState = true;
                     BindingCommand = labelButtonPair.Key;
                     
                     return;

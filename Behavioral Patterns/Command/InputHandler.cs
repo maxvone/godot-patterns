@@ -12,7 +12,7 @@ namespace Patterns.Behavioral_Patterns.Command
 		private Label _actionLabel;
 		private Settings _settingsWindow;
 
-		private Dictionary<ICommand, uint> _commands = new Dictionary<ICommand, uint>()
+		private Dictionary<ICommand, uint> _commandsForScancodes = new Dictionary<ICommand, uint>()
 		{
 			{new JumpCommand(), (uint)KeyList.Space},
 			{new CrouchCommand(), (uint)KeyList.Control},
@@ -25,44 +25,45 @@ namespace Patterns.Behavioral_Patterns.Command
 		public override void _Ready()
 		{
 			_actionLabel = GetNode<Label>("Container/ActionLabel");
-			_settingsWindow = GetNode<Settings>("Container/Settings");
 			
-			_settingsWindow.Initialize(_commands);
+			_settingsWindow = GetNode<Settings>("Container/Settings");
+			_settingsWindow.Initialize(_commandsForScancodes);
 
 			KeysUpdated += _settingsWindow.UpdateButtons;
 		}
 
 		public override void _UnhandledKeyInput(InputEventKey @event)
 		{
-			base._UnhandledKeyInput(@event);
-
-
-			if (_settingsWindow.IsBinding)
+			if (_settingsWindow.IsInBindingState)
 			{
 				BindKey(@event.Scancode, _settingsWindow.BindingCommand);
 			}
 			else
 			{
-				foreach (var item in _commands)
-				{
-					if (@event.Pressed && @event.Scancode == (uint) item.Value)
-					{
-						item.Key.Execute(_actionLabel);
-					}
-				}
+				ExecuteOnInput(@event);
 			}
-			
 		}
 
-		public void BindKey(uint newKey, ICommand command)
+		private void ExecuteOnInput(InputEventKey @event)
 		{
-			for (int i = 0; i < _commands.Count; i++)
+			foreach (var item in _commandsForScancodes)
 			{
-				var item = _commands.ElementAt(i);
+				if (@event.Pressed && @event.Scancode == (uint) item.Value)
+				{
+					item.Key.Execute(_actionLabel);
+				}
+			}
+		}
+
+		private void BindKey(uint newKey, ICommand command)
+		{
+			for (int i = 0; i < _commandsForScancodes.Count; i++)
+			{
+				var item = _commandsForScancodes.ElementAt(i);
 				if (item.Key.GetType() == command.GetType())
 				{
-					_commands[item.Key] = newKey;
-					OnKeysUpdated(_commands);
+					_commandsForScancodes[item.Key] = newKey;
+					OnKeysUpdated(_commandsForScancodes);
 				}
 			}
 		}
