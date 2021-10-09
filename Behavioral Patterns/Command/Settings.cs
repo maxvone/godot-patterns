@@ -11,7 +11,11 @@ namespace Patterns.Behavioral_Patterns.Command
         [Export()] private PackedScene buttonScene;
         
         private Dictionary<ICommand, LabelButtonPair> _labelButtonPairs = new Dictionary<ICommand, LabelButtonPair>();
-        public void Initialize(Dictionary<ICommand, KeyList> keyLists)
+
+        public bool IsBinding { get; set; }
+        public ICommand BindingCommand { get; private set; }
+        
+        public void Initialize(Dictionary<ICommand, uint> keyLists)
         {
 
             foreach (var item in keyLists)
@@ -28,7 +32,8 @@ namespace Patterns.Behavioral_Patterns.Command
 
                 if (buttonScene.Instance() is Button button)
                 {
-                    button.Text = item.Value.ToString();
+                    button.Text = OS.GetScancodeString(item.Value);
+                    button.Connect("pressed", this, nameof(OnButtonPressed));
                     AddChild(button);
                 }
                 else
@@ -43,7 +48,7 @@ namespace Patterns.Behavioral_Patterns.Command
 
         }
 
-        public void UpdateButtons(Dictionary<ICommand, KeyList> commands)
+        public void UpdateButtons(Dictionary<ICommand, uint> commands)
         {
             for (int i = 0; i < _labelButtonPairs.Count; i++)
             {
@@ -51,18 +56,40 @@ namespace Patterns.Behavioral_Patterns.Command
             
                 for (int j = 0; j < commands.Count; j++)
                 {
-                    var commandItem = _labelButtonPairs.ElementAt(i);
+                    var commandItem = commands.ElementAt(i);
             
                     
                     if (labelButtonPair.Key.GetType() == commandItem.Key.GetType())
                     {
                         _labelButtonPairs[labelButtonPair.Key].Label.Text = commandItem.Key.Name;
+                        _labelButtonPairs[labelButtonPair.Key].Button.Text = OS.GetScancodeString(commandItem.Value);
                     }
                 }
                 
-                
+            }
+
+            IsBinding = false;
+            BindingCommand = null;
+        }
+
+        private void OnButtonPressed()
+        {
+            for (int i = 0; i < _labelButtonPairs.Count; i++)
+            {
+                var labelButtonPair = _labelButtonPairs.ElementAt(i);
+
+                if (labelButtonPair.Value.Button.Pressed)
+                {
+                    labelButtonPair.Value.Button.Text = "Press a key";
+                    
+                    IsBinding = true;
+                    BindingCommand = labelButtonPair.Key;
+                    
+                    return;
+                }
             }
         }
+        
     
     }
 }

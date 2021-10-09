@@ -12,15 +12,15 @@ namespace Patterns.Behavioral_Patterns.Command
 		private Label _actionLabel;
 		private Settings _settingsWindow;
 
-		private Dictionary<ICommand, KeyList> _commands = new Dictionary<ICommand, KeyList>()
+		private Dictionary<ICommand, uint> _commands = new Dictionary<ICommand, uint>()
 		{
-			{new JumpCommand(), KeyList.Space},
-			{new CrouchCommand(), KeyList.Control},
-			{new ReloadCommand(), KeyList.R},
-			{new ShootCommand(), KeyList.F},
+			{new JumpCommand(), (uint)KeyList.Space},
+			{new CrouchCommand(), (uint)KeyList.Control},
+			{new ReloadCommand(), (uint)KeyList.R},
+			{new ShootCommand(), (uint)KeyList.F},
 		};
 		
-		public event Action<Dictionary<ICommand, KeyList>> KeysUpdated;
+		public event Action<Dictionary<ICommand, uint>> KeysUpdated;
 		
 		public override void _Ready()
 		{
@@ -36,16 +36,25 @@ namespace Patterns.Behavioral_Patterns.Command
 		{
 			base._UnhandledKeyInput(@event);
 
-			foreach (var item in _commands)
+
+			if (_settingsWindow.IsBinding)
 			{
-				if (@event.Pressed && @event.Scancode == (ulong) item.Value)
+				BindKey(@event.Scancode, _settingsWindow.BindingCommand);
+			}
+			else
+			{
+				foreach (var item in _commands)
 				{
-					item.Key.Execute(_actionLabel);
+					if (@event.Pressed && @event.Scancode == (uint) item.Value)
+					{
+						item.Key.Execute(_actionLabel);
+					}
 				}
 			}
+			
 		}
 
-		public void BindKey(KeyList newKey, ICommand command)
+		public void BindKey(uint newKey, ICommand command)
 		{
 			for (int i = 0; i < _commands.Count; i++)
 			{
@@ -58,7 +67,7 @@ namespace Patterns.Behavioral_Patterns.Command
 			}
 		}
 
-		protected virtual void OnKeysUpdated(Dictionary<ICommand, KeyList> obj)
+		protected virtual void OnKeysUpdated(Dictionary<ICommand, uint> obj)
 		{
 			KeysUpdated?.Invoke(obj);
 		}
