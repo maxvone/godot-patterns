@@ -6,7 +6,6 @@ namespace Patterns.Behavioral_Patterns.Command
     {
         public string Name { get; } = "Jump";
 
-        
         public void Execute(Label label)
         {
             label.Text = "Jump";
