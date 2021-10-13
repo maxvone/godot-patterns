@@ -48,7 +48,7 @@ namespace Patterns.Behavioral_Patterns.Command
 		{
 			foreach (var item in _commandsForScancodes)
 			{
-				if (@event.Pressed && @event.Scancode == (uint) item.Value)
+				if (@event.Pressed && @event.Scancode == item.Value)
 				{
 					item.Key.Execute(_actionLabel);
 				}

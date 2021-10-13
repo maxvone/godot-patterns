@@ -14,6 +14,11 @@ config/name="Patterns"
 run/main_scene="res://Behavioral Patterns/Command/CommandScene.tscn"
 config/icon="res://icon.png"
 
+[global]
+
+env=false
+environment=false
+
 [physics]
 
 common/enable_pause_aware_picking=true
@@ -23,4 +28,5 @@ common/enable_pause_aware_picking=true
 quality/driver/driver_name="GLES2"
 vram_compression/import_etc=true
 vram_compression/import_etc2=false
+environment/default_clear_color=Color( 0.14902, 0.172549, 0.231373, 1 )
 environment/default_environment="res://default_env.tres"
